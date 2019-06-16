@@ -30,6 +30,30 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_price(self):
+        if self.sale_price:
+            return (self.sale_price)
+        else:
+            return (self.price)
+
+    def get_featured_image(self):
+        try:
+            images = self.productimage_set.all()
+        except:
+            return None
+        for i in images:
+            if i.featured_image:
+                return i.image
+            else:
+                return None
+
+    def is_active(self):
+        return self.active
+
+
+    def get_absolute_url(self,):
+        return reverse('single_product',args=[self.slug])
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
@@ -91,19 +115,18 @@ class CategoryImage(models.Model):
         verbose_name = "Category Image"
         verbose_name_plural = "Category Images"
 #
-# class FeaturedManager(models.Model):
-#     def get_featured_instance(self):
-#         items = super(FeaturedManager, self).filter(date_start__lte=datetime.datetime.now()).filter(date_end__gte=datetime.datetime.now())
-#         print items
-#         all_items = super(FeaturedManager, self).all()
-#         if len(items) >= 1:
-#             return items[0]
-#         else:
-#             for i in all_items:
-#                 if i.default:
-#                     return i
-#             return all_items[0]
-
+class FeaturedManager(models.Manager):
+    def get_featured_instance(self):
+        items = super(FeaturedManager, self).filter(date_start__lte=datetime.datetime.now()).filter(date_end__gte=datetime.datetime.now())
+        print ('items')
+        all_items = super(FeaturedManager, self).all()
+        if len(items) >= 1:
+           return items[0]
+        else:
+           for i in all_items:
+               if i.default:
+                   return i
+           return all_items[0]
 class Featured(models.Model):
     title = models.CharField(max_length=120)
     products = models.ManyToManyField(Product,limit_choices_to={'active':True})
@@ -119,4 +142,4 @@ class Featured(models.Model):
     def get_featured(self):
         return self.products[:2]
 
-     #objects = FeaturedManager()
+    objects = FeaturedManager()
