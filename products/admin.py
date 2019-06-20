@@ -37,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
     class Meta:
         model = Product
     def current_price(self,obj):
-        if obj.sale_price > 0:
+        if obj.sale_price:
             return obj.sale_price
         else:
             return obj.price
@@ -51,7 +51,7 @@ class ProductAdmin(admin.ModelAdmin):
     categories.allow_tags=True
 
     def live_link(self,obj):
-        link = "<a href='/products/"+str(obj.slug)+"/'>"+obj.title+"</a>"
+        link = "<a href='media/products/"+str(obj.slug)+"/'>"+obj.name+"</a>"
         return link
     live_link.allow_tags=True
 

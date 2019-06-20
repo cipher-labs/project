@@ -1,0 +1,78 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+<div class="col-sm-8 pull-left">
+<h1>{{ product }}</h1>
+{% for img in images %}
+<img src="{{ MEDIA_URL }}{{ img.image.url }}" width="500"/>
+{% endfor %}
+{% if related %}
+<h1>Related Product{% if related|length > 1%}s{% endif %}</h1>
+<ul>
+  {% for item in related %}
+  <li>
+    <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+</div>
+
+<!---starts right panel----->
+
+<div class='col-sm-4 pull-right'>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Product:{{ product }}</h3>
+
+    </div>
+    <div class="panel-body">
+      {{ product.description }}<br/>
+      ${{ product.get_price }}
+      <br/>
+      <br/>
+      {% if object in current_order_products %}
+        In Cart <a class='btn btn-success' href='{% url "shopping_cart:order_summary" %}'>View Cart</a>
+      {% endif %}
+  </div>
+</div>
+
+{% if categories %}
+<div class="panel panel-default">
+<div class="panel-heading">
+<h1 class="panel-title">Categor{% if categories|length == 1 %}y{% else %}ies{% endif %}</h1>
+  </div>
+<div class="panel-body">
+<ul>
+
+{% for item in categories %}
+<li>
+  <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">My actions</h3>
+  </div>
+  <div class="panel-body">
+    <div class="btn-group-vertical">
+    {% if edit %}
+     <a class='btn btn-default' href=''>Edit {{ product }}</a>
+     <a class='btn btn-default' href=''>manage Images</a>
+
+</div>
+</div>
+</div>
+
+
+{% endif %}
+
+
+</div>
+</div>
+{% endblock content %}

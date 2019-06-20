@@ -4,6 +4,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
@@ -52,7 +53,7 @@ class Product(models.Model):
 
 
     def get_absolute_url(self,):
-        return reverse('single_product',args=[self.slug])
+        return reverse('products:single_product',args=[self.slug])
 
 
 class ProductImage(models.Model):
@@ -95,8 +96,8 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-    def get_absolute_url(self,):
-        return reverse('category',args=[self.slug])
+    def get_absolute_url(self):
+        return reverse('products:category',args=[self.slug])
 #
 #
 class CategoryImage(models.Model):

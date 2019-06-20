@@ -17,12 +17,12 @@ def home(request):
     featured = Featured.objects.get_featured_instance()
     for i in featured.products.all():
         featured_products.append(i)
-    try:
-        order_id = request.session['order_id']
-        cart = Order.objects.get(id=order_id)
-    except:
-        in_cart = False
-        orderitems = None
+    filtered_orders = Order.objects.filter(owner=request.user.profile, is_ordered=False)
+    current_order_products = []
+    if filtered_orders.exists():
+    	user_order = filtered_orders[0]
+    	user_order_items = user_order.items.all()
+    	current_order_products = [product.product for product in user_order_items]
     # if cart:
     #     cartitems = []
     #     for item in cart.cartitem_set.all():
@@ -30,6 +30,7 @@ def home(request):
     template= "home.html"
     context={
         'featured_products':featured_products,
-        'featured':featured
+        'featured':featured,
+        'current_order_products':current_order_products
     }
     return render(request,template,context)
