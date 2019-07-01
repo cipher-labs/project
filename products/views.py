@@ -5,6 +5,85 @@ from django.db.models import Q
 from django.shortcuts import render
 from shopping_cart.models import Order
 from .models import Product,Category,ProductImage
+from .mixins import ProductManagerMixin
+from cart.mixins import (
+			LoginRequiredMixin,
+			MultiSlugMixin,
+			SubmitBtnMixin
+			)
+from sellers.mixins import SellerAccountMixin
+from .forms import ProductAddForm, ProductModelForm
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.list import ListView
+
+
+
+
+class ProductCreateView(SellerAccountMixin, SubmitBtnMixin, CreateView):
+	model = Product
+	template_name = "form.html"
+	form_class = ProductModelForm
+	#success_url = "/products/"
+	submit_btn = "Add Product"
+
+	def form_valid(self, form):
+		seller = self.get_account()
+		form.instance.seller = seller
+		valid_data = super(ProductCreateView, self).form_valid(form)
+		#tags = form.cleaned_data.get("tags")
+		# if tags:
+		# 	tags_list = tags.split(",")
+		# 	for tag in tags_list:
+		# 		if not tag == " ":
+		# 			new_tag = Tag.objects.get_or_create(title=str(tag).strip())[0]
+		# 			new_tag.products.add(form.instance)
+		return valid_data
+
+class ProductUpdateView(ProductManagerMixin,SubmitBtnMixin, MultiSlugMixin, UpdateView):
+	model = Product
+	template_name = "form.html"
+	form_class = ProductModelForm
+	#success_url = "/products/"
+	submit_btn = "Update Product"
+	def get_initial(self):
+		initial = super(ProductUpdateView,self).get_initial()
+		print (initial)
+		# tags = self.get_object().tag_set.all()
+		# initial["tags"] = ", ".join([x.title for x in tags])
+		"""
+		tag_list = []
+		for x in tags:
+			tag_list.append(x.title)
+		"""
+		return initial
+	def form_valid(self, form):
+		valid_data = super(ProductUpdateView, self).form_valid(form)
+		# tags = form.cleaned_data.get("tags")
+		# obj = self.get_object()
+		# obj.tag_set.clear()
+		# if tags:
+		# 	tags_list = tags.split(",")
+        #
+		# 	for tag in tags_list:
+		# 		if not tag == " ":
+		# 			new_tag = Tag.objects.get_or_create(title=str(tag).strip())[0]
+		# 			new_tag.products.add(self.get_object())
+		return valid_data
+
+class SellerProductListView(SellerAccountMixin, ListView):
+	model = Product
+	template_name = "sellers/product_list_view.html"
+
+	def get_queryset(self, *args, **kwargs):
+		qs = super(SellerProductListView, self).get_queryset(**kwargs)
+		qs = qs.filter(seller=self.get_account())
+		query = self.request.GET.get("q")
+		if query:
+			qs = qs.filter(
+					Q(name__icontains=query)|
+					Q(description__icontains=query)
+				).order_by("name")
+		return qs
 
 @login_required
 def product_list(request):

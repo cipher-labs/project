@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^profiles/', include('accounts.urls', namespace='accounts')),
     url(r'^products/', include('products.urls', namespace='products')),
     url(r'^cart/', include('shopping_cart.urls', namespace='shopping_cart')),
+    url(r'^seller/', include('sellers.urls', namespace='sellers')),
     url(r'^accounts/', include('allauth.urls'))
 ]
 

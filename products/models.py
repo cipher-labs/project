@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.core.files.storage import FileSystemStorage
 from django.db import models
+from sellers.models import SellerAccount
 
 protected_loc = settings.MEDIA_ROOT
 
@@ -18,6 +19,7 @@ def download_loc(instance,filename):
     #     return "%s/download/%s" %("default",filename)
 
 class Product(models.Model):
+    seller = models.ForeignKey(SellerAccount,on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
     description = models.CharField(max_length=500,null=True,blank=True)
     download = models.FileField(upload_to=download_loc,storage=FileSystemStorage(location=protected_loc),null=True,blank=True)
@@ -50,6 +52,10 @@ class Product(models.Model):
 
     def is_active(self):
         return self.active
+
+    def get_edit_url(self):
+    	view_name = "sellers:product_edit"
+    	return reverse(view_name, kwargs={"pk": self.id})
 
 
     def get_absolute_url(self,):

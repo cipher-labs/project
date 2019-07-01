@@ -35,6 +35,7 @@ class Order(models.Model):
 
 class Transaction(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
     token = models.CharField(max_length=120)
     order_id = models.CharField(max_length=120)
     amount = models.DecimalField(max_digits=100, decimal_places=2)
@@ -46,11 +47,3 @@ class Transaction(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
-
-
-
-
-
-
-
-        

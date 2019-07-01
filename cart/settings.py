@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
     'accounts',
     'products',
-    'shopping_cart'
+    'shopping_cart',
+    'sellers'
 ]
 
 MIDDLEWARE = [
@@ -144,12 +145,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if DEBUG:
     # test keys
-    STRIPE_PUBLISHABLE_KEY = ''
-    STRIPE_SECRET_KEY = ''
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_3yqdE63zmEVISXyxdHfuhPgq0059Ulu1mB'
+    STRIPE_SECRET_KEY = 'sk_test_In7qvz44JdZ9ToJ7jELnmyKX00unFICyLj'
     BT_ENVIRONMENT='sandbox'
-    BT_MERCHANT_ID='YOUR BT_MERCHANT_ID'
-    BT_PUBLIC_KEY='YOUR BT_PUBLIC_KEY'
-    BT_PRIVATE_KEY='YOUR BT_PRIVATE_KEY'
+    BT_MERCHANT_ID='858hgcq4h9h76n8d'
+    BT_PUBLIC_KEY='bq5jdr98dcgd8r38'
+    BT_PRIVATE_KEY='eea6ff01ea13368b433a3a2cc92dee6c'
 else:
     # live keys
     STRIPE_PUBLISHABLE_KEY = 'YOUR STRIPE LIVE PUB KEY'

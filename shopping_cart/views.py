@@ -35,7 +35,7 @@ def add_to_cart(request, **kwargs):
     # check if the user already owns this product
     if product in request.user.profile.ebooks.all():
         messages.info(request, 'You already own this ebook')
-        return redirect(reverse('products:product-list')) 
+        return redirect(reverse('products:product-list'))
     # create orderItem of the selected product
     order_item, status = OrderItem.objects.get_or_create(product=product)
     # create order associated with the user
@@ -111,7 +111,7 @@ def checkout(request, **kwargs):
                 for x in result.errors.deep_errors:
                     messages.info(request, x)
                 return redirect(reverse('shopping_cart:checkout'))
-            
+
     context = {
         'order': existing_order,
         'client_token': client_token,
@@ -130,7 +130,7 @@ def update_transaction_records(request, token):
     order_to_purchase.is_ordered=True
     order_to_purchase.date_ordered=datetime.datetime.now()
     order_to_purchase.save()
-    
+
     # get all items in the order - generates a queryset
     order_items = order_to_purchase.items.all()
 
@@ -143,16 +143,26 @@ def update_transaction_records(request, token):
     order_products = [item.product for item in order_items]
     user_profile.ebooks.add(*order_products)
     user_profile.save()
+    for i in order_products:
+        transaction = Transaction(profile=request.user.profile,
+                                    product=i,
+                                    token=token,
+                                    order_id=order_to_purchase.id,
+                                    amount=order_to_purchase.get_cart_total(),
+                                    success=True)
+         # save the transcation (otherwise doesn't exist)
+        transaction.save()
 
-    
-    # create a transaction
-    transaction = Transaction(profile=request.user.profile,
-                            token=token,
-                            order_id=order_to_purchase.id,
-                            amount=order_to_purchase.get_cart_total(),
-                            success=True)
-    # save the transcation (otherwise doesn't exist)
-    transaction.save()
+
+    # # create a transaction
+    # transaction = Transaction(profile=request.user.profile,
+    #                         token=token,
+    #                         order_id=order_to_purchase.id,
+    #                         product = order_products,
+    #                         amount=order_to_purchase.get_cart_total(),
+    #                         success=True)
+    # # save the transcation (otherwise doesn't exist)
+    # transaction.save()
 
 
     # send an email to the customer
