@@ -27,7 +27,7 @@ def get_user_pending_order(request):
 
 
 @login_required()
-def add_to_cart(request, **kwargs):
+def add_to_cart(request,**kwargs):
     # get the user profile
     user_profile = get_object_or_404(Profile, user=request.user)
     # filter products by id
@@ -45,10 +45,10 @@ def add_to_cart(request, **kwargs):
         # generate a reference code
         user_order.ref_code = generate_order_id()
         user_order.save()
-
+# No module named 'slug'
     # show confirmation message and redirect back to the same page
     messages.info(request, "item added to cart")
-    return redirect(reverse('products:product-list'))
+    return redirect(product)
 
 
 @login_required()

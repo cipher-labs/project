@@ -148,7 +148,7 @@ def product_list(request):
     return render(request, "products/product_list.html", context)
 
 
-
+@login_required()
 def single(request,slug):
     product = Product.objects.get(slug=slug)
     object_list = Product.objects.all()

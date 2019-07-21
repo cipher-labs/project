@@ -5,13 +5,14 @@ from wsgiref.util import FileWrapper
 from django.http import Http404,HttpResponse
 from django.views.generic import View
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from cart.mixins import MultiSlugMixin
 from products.models import Product
 from shopping_cart.models import Order
 from .models import Profile
 
-
+@login_required()
 def my_profile(request):
 	my_user_profile = Profile.objects.filter(user=request.user).first()
 	my_orders = Order.objects.filter(is_ordered=True, owner=my_user_profile)

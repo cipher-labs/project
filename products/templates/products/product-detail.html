@@ -176,13 +176,11 @@ $(".rating input[type='radio']").click(function(event){
                   {% if product in user.profile.ebooks.all %}
                     You own this
                   {% elif product in current_order_products %}
-									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-										Go to cart
-									</button>
+                  <a href="{% url 'shopping_cart:order_summary' %}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">Go to cart</a>
                   {% else %}
                   <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-										Add to cart
-									</button>
+										<a href="{% url 'shopping_cart:add_to_cart' product.id %}">Add to cart</a>
+                  </button>
                   {% endif %}
 								</div>
 

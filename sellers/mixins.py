@@ -8,7 +8,7 @@ from .models import SellerAccount
 
 
 
-class SellerAccountMixin(object):
+class SellerAccountMixin(LoginRequiredMixin,object):
 	account = None
 	products = []
 	transactions = []
