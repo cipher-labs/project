@@ -1,23 +1,68 @@
 from __future__ import unicode_literals
 from itertools import chain
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q,Avg,Count
 from django.shortcuts import render
+from django.http import Http404, HttpResponse, JsonResponse
 from shopping_cart.models import Order
-from .models import Product,Category,ProductImage
+from accounts.models import Profile
+
+from .models import Product,Category,ProductImage,ProductRating
 from .mixins import ProductManagerMixin
 from cart.mixins import (
 			LoginRequiredMixin,
 			MultiSlugMixin,
-			SubmitBtnMixin
+			SubmitBtnMixin,
+			AjaxRequiredMixin
 			)
 from sellers.mixins import SellerAccountMixin
 from .forms import ProductAddForm, ProductModelForm
+from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
+class ProductRatingAjaxView(AjaxRequiredMixin, View):
+	def post(self, request, *args, **kwargs):
+		if not request.user.is_authenticated:
+			return JsonResponse({}, status=401)
 
+		user = request.user
+		product_id = request.POST.get("product_id")
+		rating_value = request.POST.get("rating_value")
+		exists = Product.objects.filter(id=product_id).exists()
+		if not exists:
+			return JsonResponse({}, status=404)
 
+		try:
+			product_obj = Product.object.get(id=product_id)
+		except:
+			product_obj = Product.objects.filter(id=product_id).first()
+
+		rating_obj, rating_obj_created = ProductRating.objects.get_or_create(
+				user=user,
+				product=product_obj
+				)
+		try:
+			rating_obj = ProductRating.objects.get(user=user, product=product_obj)
+		except ProductRating.MultipleObjectsReturned:
+			rating_obj = ProductRating.objects.filter(user=user, product=product_obj).first()
+		except:
+			#rating_obj = ProductRating.objects.create(user=user, product=product_obj)
+			rating_obj = ProductRating()
+			rating_obj.user = user
+			rating_obj.product = product_obj
+		rating_obj.rating = int(rating_value)
+		myproducts = user.profile.ebooks.all()
+
+		if product_obj in myproducts:
+			rating_obj.verified = True
+		# verify ownership
+		rating_obj.save()
+
+		data = {
+			"success": True
+		}
+		return JsonResponse(data)
 
 class ProductCreateView(SellerAccountMixin, SubmitBtnMixin, CreateView):
 	model = Product
@@ -106,8 +151,16 @@ def product_list(request):
 
 def single(request,slug):
     product = Product.objects.get(slug=slug)
+    object_list = Product.objects.all()
+    my_rating = []
     images = product.productimage_set.all()
     categories = product.category_set.all()
+    rating_avg = product.productrating_set.aggregate(Avg("rating"), Count("rating"))
+    if request.user.is_authenticated:
+	    rating_obj = ProductRating.objects.filter(user=request.user, product=product)
+	    if rating_obj.exists():
+		    my_rating =  rating_obj.first().rating
+
     related = []
     if len(categories) >=1:
         for category in categories:
@@ -115,14 +168,25 @@ def single(request,slug):
             for item in products_category:
                 if not item == product:
                     related.append(item)
+    filtered_orders = Order.objects.filter(owner=request.user.profile, is_ordered=False)
+    current_order_products = []
+    if filtered_orders.exists():
+	    user_order = filtered_orders[0]
+	    user_order_items = user_order.items.all()
+	    current_order_products = [product.product for product in user_order_items]
+
     context = {
         "product":product,
         "categories":categories,
         "edit":True,
         "images":images,
         "related":related,
+		"rating_avg":rating_avg,
+		"my_rating":my_rating,
+		"object_list":object_list,
+		"current_order_products":current_order_products
     }
-    return render(request,"products/single.html",context)
+    return render(request,"products/product-detail.html",context)
 
 
 def search(request):

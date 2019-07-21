@@ -63,7 +63,7 @@ class SellerDashboard(SellerAccountMixin,FormMixin, View):
 			context["title"] = "Seller Dashboard"
 
 			#products = Product.objects.filter(seller=account)
-			context["products"] = self.get_products()
+			context["products"] = self.get_products().exclude()[:4]
 			transactions_today = self.get_transactions_today()
 			context["transactions_today"] = transactions_today
 			context["today_sales"] = self.get_today_sales()

@@ -6,7 +6,7 @@
 
 
 {% block content %}
-<h1>My Seller Products</h1>
+<h1>All Products</h1>
 <table>
 
 	{% for instance in product_list %}
@@ -21,7 +21,7 @@
     	{% if instance.get_featured_image %}
     	<a href='{{ instance.get_absolute_url }}'>
 
-    		<img src='{{ MEDIA_URL }}media/{{ product.get_featured_image }}' style='max-width:100px'/></a><br/>
+    		<img src='' style='max-width:100px'/></a><br/>
     	{% endif %}
     	</td>
     	<td>{{ instance.price }}

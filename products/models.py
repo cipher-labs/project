@@ -62,6 +62,11 @@ class Product(models.Model):
         return reverse('products:single_product',args=[self.slug])
 
 
+    def get_download(self):
+        view_name = "accounts:download_slug"
+        url = reverse(view_name, kwargs={"slug": self.slug})
+        return url
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
     image = models.ImageField(upload_to="products/image/")
@@ -150,3 +155,13 @@ class Featured(models.Model):
         return self.products[:2]
 
     objects = FeaturedManager()
+
+
+class ProductRating(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+	product = models.ForeignKey(Product,on_delete=models.CASCADE)
+	rating = models.IntegerField(null=True, blank=True)
+	verified = models.BooleanField(default=False)
+
+	def __str__(self):
+		return "%s" %(self.rating)

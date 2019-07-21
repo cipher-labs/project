@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 # admin.site.register(Product)
 
 from django.contrib import admin
-from.models import Product,Category,ProductImage,Tag,CategoryImage,Featured
+from.models import Product,Category,ProductImage,Tag,CategoryImage,Featured,ProductRating
 
 
 class FeaturedProductsAdmin(admin.ModelAdmin):
@@ -63,3 +63,4 @@ class CategoryAdmin(admin.ModelAdmin):
     class Meta:
         model = Category
 admin.site.register(Category,CategoryAdmin)
+admin.site.register(ProductRating)

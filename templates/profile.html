@@ -8,6 +8,7 @@
         <th>Reference Code</th>
         <th>Items</th>
         <th>Price</th>
+        <th>Download</th>
       </tr>
       {% for order in my_orders %}
         <tr>
@@ -19,7 +20,11 @@
       		{% endfor %}
       	  </td>
           <td>${{ order.get_cart_total }}</td>
-
+          {% for item in order.items.all %}
+          {% if item.product.download %}
+          <td><a href='{{ item.product.get_download }}'>Download</a></td>
+          {% endif %}
+          {% endfor %}
         </tr>
       {% empty %}
         <tr>
@@ -31,7 +36,7 @@
         <td colspan=4>
           <a href="{% url 'products:product-list' %}" class="btn btn-warning pull-left">
             {% if not order %}Continue Shopping{% else %}Add Items to Cart {% endif %}
-          </a> 
+          </a>
         </td>
       </tr>
     </table>

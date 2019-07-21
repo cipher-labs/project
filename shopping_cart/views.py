@@ -2,11 +2,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.models import Profile
 from products.models import Product
-
 from shopping_cart.extras import generate_order_id, transact, generate_client_token
 from shopping_cart.models import OrderItem, Order, Transaction
 
@@ -66,7 +66,7 @@ def order_details(request, **kwargs):
     context = {
         'order': existing_order
     }
-    return render(request, 'shopping_cart/order_summary.html', context)
+    return render(request, 'shopping_cart/shoping-cart.html', context)
 
 
 @login_required()
@@ -168,9 +168,9 @@ def update_transaction_records(request, token):
     # send an email to the customer
     # look at tutorial on how to send emails with sendgrid
     messages.info(request, "Thank you! Your purchase was successful!")
-    return redirect(reverse('accounts:my_profile'))
+    return redirect(reverse('shopping_cart:purchase_success'))
 
 
 def success(request, **kwargs):
     # a view signifying the transcation was successful
-    return render(request, 'shopping_cart/purchase_success.html', {})
+    return render(request, 'shopping_cart/order-complete.html', {})

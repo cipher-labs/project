@@ -4,6 +4,14 @@ from django.shortcuts import render
 from shopping_cart.models import Order
 from products.models import Featured
 
+def about(request):
+    return render(request,"about.html",{})
+
+def contact(request):
+    return render(request,"contact.html",{})
+
+
+
 # def home(request):
 #     featured_products = []
 #     featured = Featured.objects.all()
@@ -27,7 +35,7 @@ def home(request):
     #     cartitems = []
     #     for item in cart.cartitem_set.all():
     #         cartitems.append(item.product)
-    template= "home.html"
+    template= "index.html"
     context={
         'featured_products':featured_products,
         'featured':featured,
