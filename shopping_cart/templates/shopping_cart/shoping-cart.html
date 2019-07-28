@@ -41,25 +41,29 @@
 			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
 					<div class="left-top-bar">
-						Free shipping for standard order over $100
+						Earn extra money by Joining over 2000 sellers
 					</div>
 
 					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Help & FAQs
+						<a href="{% url 'sellers:dashboard' %}" class="flex-c-m p-lr-10 trans-04">
+							Become a seller
 						</a>
 
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							My Account
+						{% if user.is_authenticated %}
+						<a href="{% url 'accounts:my_profile' %}" class="flex-c-m p-lr-10 trans-04">
+							My Orders
 						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							EN
+						<a href="{% url 'account_logout' %}" class="flex-c-m p-lr-10 trans-04">
+							Logout
 						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							USD
+						{% else %}
+						<a href="{% url 'account_login' %}" class="flex-c-m p-lr-10 trans-04">
+							Login
 						</a>
+						<a href="{% url 'account_signup' %}" class="flex-c-m p-lr-10 trans-04">
+							Register
+						</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -76,32 +80,23 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li>
-								<a href="index.html">Home</a>
-								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul>
-							</li>
-
-							<li class="active-menu">
-								<a href="product.html">Shop</a>
+								<a href="{% url 'home' %}">Home</a>
 							</li>
 
 							<li>
-								<a href="shoping-cart.html">Features</a>
+								<a href="/products">Shop</a>
 							</li>
 
 							<li>
-								<a href="blog.html">Blog</a>
+								<a href="{% url 'shopping_cart:order_summary' %}">My Cart</a>
 							</li>
 
 							<li>
-								<a href="about.html">About</a>
+								<a href="/about">About</a>
 							</li>
 
 							<li>
-								<a href="contact.html">Contact</a>
+								<a href="/contact">Contact</a>
 							</li>
 						</ul>
 					</div>
@@ -112,14 +107,9 @@
 							<i class="zmdi zmdi-search"></i>
 						</div>
 
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-							<i class="zmdi zmdi-shopping-cart"></i>
+						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11">
+							<a href="{% url 'shopping_cart:order_summary' %}"><i class="zmdi zmdi-shopping-cart"></i></a>
 						</div>
-
-
-						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a>
 					</div>
 				</nav>
 			</div>
@@ -161,27 +151,30 @@
 			<ul class="topbar-mobile">
 				<li>
 					<div class="left-top-bar">
-						Free shipping for standard order over $100
+						Earn extra money by Joining over 2000 sellers
 					</div>
 				</li>
 
 				<li>
 					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							Help & FAQs
+						<a href="{% url 'sellers:dashboard' %}" class="flex-c-m p-lr-10 trans-04">
+							Become a seller
 						</a>
-
+						{% if user.is_authenticated %}
 						<a href="#" class="flex-c-m p-lr-10 trans-04">
 							My Account
 						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							EN
+						<a href="{% url 'account_logout' %}" class="flex-c-m p-lr-10 trans-04">
+							Logout
 						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							USD
+						{% else %}
+						<a href="{% url 'account_login' %}" class="flex-c-m p-lr-10 trans-04">
+							Login
 						</a>
+						<a href="{% url 'account_signup' %}" class="flex-c-m p-lr-10 trans-04">
+							Register
+						</a>
+						{% endif %}
 					</div>
 				</li>
 			</ul>
@@ -189,34 +182,25 @@
 			<ul class="main-menu-m">
 				<li>
 					<a href="index.html">Home</a>
-					<ul class="sub-menu-m">
-						<li><a href="index.html">Homepage 1</a></li>
-						<li><a href="home-02.html">Homepage 2</a></li>
-						<li><a href="home-03.html">Homepage 3</a></li>
-					</ul>
 					<span class="arrow-main-menu-m">
 						<i class="fa fa-angle-right" aria-hidden="true"></i>
 					</span>
 				</li>
 
 				<li>
-					<a href="product.html">Shop</a>
+					<a href="/products">Shop</a>
 				</li>
 
 				<li>
-					<a href="shoping-cart.html">Features</a>
+					<a href="{% url 'accounts:my_profile' %}">My Orders</a>
 				</li>
 
 				<li>
-					<a href="blog.html">Blog</a>
+					<a href="/about">About</a>
 				</li>
 
 				<li>
-					<a href="about.html">About</a>
-				</li>
-
-				<li>
-					<a href="contact.html">Contact</a>
+					<a href="/contact">Contact</a>
 				</li>
 			</ul>
 		</div>
@@ -228,11 +212,11 @@
 					<img src="{% static 'images/icons/icon-close2.png' %}" alt="CLOSE">
 				</button>
 
-				<form class="wrap-search-header flex-w p-l-15">
+				<form class="wrap-search-header flex-w p-l-15" action="{% url 'products:search' %}">
 					<button class="flex-c-m trans-04">
 						<i class="zmdi zmdi-search"></i>
 					</button>
-					<input class="plh3" type="text" name="search" placeholder="Search...">
+					<input class="plh3" type="text" name="q" placeholder="Search...">
 				</form>
 			</div>
 		</div>

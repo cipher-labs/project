@@ -2,7 +2,7 @@ from django import forms
 
 from django.utils.text import slugify
 
-from .models import Product
+from .models import Product,ProductImage
 
 PUBLISH_CHOICES = (
 	#('', ""),

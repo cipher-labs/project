@@ -46,11 +46,11 @@
 </table>
 {% if transactions %}
 <div class='pull-left col-primary '>
-	<h3>Today's sales are ${{ today_sales.normalize  }}</h3>
+	<h3>Today's sales are ${{ today_sales.normalize }}</h3>
 {% include "sellers/transaction_list.html" with transaction_list=transactions_today %}
 
 <br/>
-	<h3>Recent Transaction History (Total Sales: ${{ total_sales.normalize  }})</h3>
+	<h3>Recent Transaction History (Total Sales: ${{ total_sales.normalize }})</h3>
 {% include "sellers/transaction_list.html" with transaction_list=transactions %}
 <p>
 <a href='{% url "sellers:transactions" %}'>View all transactions</a>

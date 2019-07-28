@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load filename %}
 {% block content %}
-
+{% if query %}
 <h3>Results for:{{ query }}</h3>
+{% endif %}
 <h1>Products</h1>
 <ol>
 {% for item in results %}
@@ -10,7 +11,8 @@
   <li>
   <a href="{{ item.get_absolute_url }}">{{ item }}</a> Product
 </li>{% endif %}
-
+{% empty %}
+    <li>No Products yet.</li>
 {% endfor %}
 </ol>
 <h1>Categories</h1>
@@ -22,6 +24,8 @@
   </li>
   {% endif %}
 </ul>
+{% empty %}
+    <li>No Category yet.</li>
 {% endfor %}
 
 {% endblock %}

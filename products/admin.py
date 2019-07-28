@@ -51,7 +51,7 @@ class ProductAdmin(admin.ModelAdmin):
     categories.allow_tags=True
 
     def live_link(self,obj):
-        link = "<a href='media/products/"+str(obj.slug)+"/'>"+obj.name+"</a>"
+        link = "<a href='products/"+str(obj.slug)+"/'>"+obj.name+"</a>"
         return link
     live_link.allow_tags=True
 

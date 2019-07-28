@@ -166,7 +166,6 @@ def update_transaction_records(request, token):
 
 
     # send an email to the customer
-    # look at tutorial on how to send emails with sendgrid
     messages.info(request, "Thank you! Your purchase was successful!")
     return redirect(reverse('shopping_cart:purchase_success'))
 

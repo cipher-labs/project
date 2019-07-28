@@ -145,7 +145,7 @@ def product_list(request):
         'current_order_products': current_order_products
     }
 
-    return render(request, "products/product_list.html", context)
+    return render(request, "products/product.html", context)
 
 
 @login_required()
@@ -187,8 +187,27 @@ def single(request,slug):
 		"current_order_products":current_order_products
     }
     return render(request,"products/product-detail.html",context)
-
-
+#
+# def search(request):
+#     q = request.GET.get('q', '')
+#
+#     product_queryset = Product.objects.filter(
+#         Q(name__icontains=q)|
+#         Q(description__icontains=q)
+#     )
+#     category_queryset = Category.objects.filter(
+#         Q(title__icontains=q)|
+#         Q(description__icontains=q)
+#     )
+#     results = list(chain(product_queryset,category_queryset))
+#     context = {
+#         'query': q,
+#         'product_queryset':product_queryset,
+#         'category_queryset':category_queryset,
+#         'results':results,
+#     }
+#
+#     return render(request,"products/search.html", context)
 def search(request):
     try:
         q = request.GET.get('q', '')
@@ -196,6 +215,9 @@ def search(request):
         q = False
     if q:
         query = q
+    else :
+        query = None
+
 
     product_queryset = Product.objects.filter(
         Q(name__icontains=q)|
@@ -206,20 +228,6 @@ def search(request):
         Q(description__icontains=q)
     )
     results = list(chain(product_queryset,category_queryset))
-    """
-
-    if q:
-        query = "You searched for: %s" %(q)
-        k = q.split()
-        if len(k)>=2:
-            products = []
-            for item in k:
-                all_products = Product.objects.filter(title__icontains=item).distinct()
-                for product in all_products:
-                    products.append(product)
-        else:
-            products = Product.objects.filter(title__icontains=q)
-            """
     context = {
         'query':query,
         'product_queryset':product_queryset,
